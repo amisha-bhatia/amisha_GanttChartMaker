@@ -1,0 +1,55 @@
+
+.timeline-csv-upload {
+  padding: 16px 20px;
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  background-color: #fafafa;
+}
+
+/* File input */
+.timeline-csv-upload input[type="file"] {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.timeline-csv-upload input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #3498db;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.timeline-csv-upload input[type="file"]::file-selector-button:hover {
+  background-color: #2980b9;
+}
+
+/* Plot container */
+.timeline-plot {
+
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+}
+
+.timeline-plot .plotly-title {
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline-plot {
+    padding: 8px;
+  }
+}
