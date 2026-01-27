@@ -12,66 +12,71 @@ const TimelineCsvUpload = () => {
   const [traces, setTraces] = useState([]);
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      complete: ({ data }) => {
-        // normalize + sort
-        const rows = data
-          .map((r) => {
-            const [h, m, s] = r.time.split(":");
-            return {
-              ...r,
-              datetime: new Date(
-                `${r.date}T${h.padStart(2, "0")}:${m}:${s}`
-              ),
-              count: Number(r.count),
-            };
-          })
-          .sort((a, b) => a.datetime - b.datetime);
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: ({ data }) => {
+      // Extract relevant fields 
+      const rows = data
+        .map((r) => {
+          // Handle date/time parsing (convert YYYY/MM/DD to YYYY-MM-DD)
+          const date = r["作業日"].replace(/\//g, "-");
+          const time = r["読取時刻"];
+          const status = r["読取り値01"];
+          const count = Number(r["値03"] || 0);
+          const product_name = r["読取り値02"] || "";
 
-        const timeline = [];
+          const [h, m, s] = time.split(":");
+          return {
+            datetime: new Date(`${date}T${h.padStart(2, "0")}:${m}:${s}`),
+            status,
+            count,
+            product_name,
+          };
+        })
+        .sort((a, b) => a.datetime - b.datetime);
 
-        for (let i = 0; i < rows.length - 1; i++) {
-          const start = rows[i];
-          const end = rows[i + 1];
+      const timeline = [];
 
-          timeline.push({
-            start: start.datetime,
-            duration: end.datetime - start.datetime,
-            status: start.status,
-            count: end.count,
-          });
-        }
+      for (let i = 0; i < rows.length - 1; i++) {
+        const start = rows[i];
+        const end = rows[i + 1];
 
-        const plotTraces = timeline.map((t) => ({
-          type: "bar",
-          orientation: "h",
-          x: [t.duration],
-          y: ["SMT_LINE_A"],
-          base: [t.start],
-          marker: { color: STATUS_COLOR[t.status] },
-          text: [`Count: ${t.count}`],
-          textposition: "inside",
-          hovertemplate:
-            "Start: %{base}<br>" +
-            "End: %{x}<br>" +
-            "Status: " +
-            t.status +
-            "<br>" +
-            "Count: " +
-            t.count +
-            "<extra></extra>",
-          showlegend: false,
-        }));
+        timeline.push({
+          start: start.datetime,
+          duration: end.datetime - start.datetime,
+          status: start.status,
+          count: end.count,
+          product_name: start.product_name,
+        });
+      }
 
-        setTraces(plotTraces);
-      },
-    });
-  };
+      const plotTraces = timeline.map((t) => ({
+        type: "bar",
+        orientation: "h",
+        x: [t.duration],
+        y: ["SMT_LINE_A"],
+        base: [t.start],
+        marker: { color: STATUS_COLOR[t.status] || "#3498db" },
+        text: `Count: ${t.count}<br>Product: ${t.product_name}`,
+        textposition: "inside",
+        hovertemplate:
+        `開始: %{base}<br>` +
+        `終了: %{x}<br>` +
+        `状態: ${t.status}<br>` +
+        `数量: ${t.count}<br>` +
+        `製品名: ${t.product_name}<extra></extra>`,
+        
+        showlegend: false,
+      }));
+
+      setTraces(plotTraces);
+    },
+  });
+};
 
   return (
     <div className="timeline-wrapper">
