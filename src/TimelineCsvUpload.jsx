@@ -8,26 +8,28 @@ const STATUS_COLOR = {
   停止: "#e74c3c",
 };
 
+const ALL_STATUSES = Object.keys(STATUS_COLOR);
+
 const TimelineCsvUpload = () => {
   const [traces, setTraces] = useState([]);
   const [linesArray, setLinesArray] = useState([]);
+  const [statusFilter, setStatusFilter] = useState([...ALL_STATUSES]);
 
   const processFile = (file, LineName) => {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       complete: ({ data }) => {
-        const rows = data  
+        const rows = data
           .map((r) => {
             const date = r["作業日"]?.replace(/\//g, "-");
             const time = r["読取時刻"];
             const status = r["読取り値01"];
             const count = Number(r["値03"] || 0);
-            const line = LineName; 
+            const line = LineName;
             const product_name = r["読取り値02"] || "";
 
             if (!date || !time) return null;
-
             const [h, m, s] = time.split(":");
             return {
               datetime: new Date(`${date}T${h.padStart(2, "0")}:${m}:${s}`),
@@ -48,7 +50,6 @@ const TimelineCsvUpload = () => {
         for (let i = 0; i < rows.length - 1; i++) {
           const start = rows[i];
           const end = rows[i + 1];
-
           timeline.push({
             start: start.datetime,
             duration: end.datetime - start.datetime,
@@ -75,9 +76,9 @@ const TimelineCsvUpload = () => {
             `数量: ${t.count}<br>` +
             `製品名: ${t.product_name}<extra></extra>`,
           showlegend: false,
+          status: t.status, // for filtering
         }));
 
-       
         setTraces((prev) => {
           const filtered = prev.filter((t) => t.y[0] !== LineName);
           return [...filtered, ...newTraces];
@@ -86,11 +87,20 @@ const TimelineCsvUpload = () => {
     });
   };
 
+  const toggleStatus = (status) => {
+    setStatusFilter((prev) =>
+      prev.includes(status)
+        ? prev.filter((s) => s !== status)
+        : [...prev, status]
+    );
+  };
+
+  // Apply status filter
+  const filteredTraces = traces.filter((t) => statusFilter.includes(t.status));
 
   return (
     <div className="timeline-wrapper">
       <div className="timeline-csv-upload">
-
         {/* LINE A INPUT */}
         <div className="upload-group">
           <label> ラインA </label>
@@ -111,10 +121,25 @@ const TimelineCsvUpload = () => {
           />
         </div>
 
-        {traces.length > 0 && (
+        {/* STATUS FILTER */}
+        <div className="status-filter">
+          <label>フィルター: </label>
+          {ALL_STATUSES.map((status) => (
+            <label key={status} style={{ marginRight: "15px" }}>
+              <input
+                type="checkbox"
+                checked={statusFilter.includes(status)}
+                onChange={() => toggleStatus(status)}
+              />
+              {status}
+            </label>
+          ))}
+        </div>
+
+        {filteredTraces.length > 0 && (
           <div className="timeline-plot">
             <Plot
-              data={traces}
+              data={filteredTraces}
               layout={{
                 title: "稼働タイムライン",
                 xaxis: {
