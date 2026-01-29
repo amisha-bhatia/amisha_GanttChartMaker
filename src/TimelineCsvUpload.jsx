@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Plot from "react-plotly.js";
 import Papa from "papaparse";
 import "./TimelineCsvUpload.css";
+import EffectiveCountSummary from "./EffectiveCountSummary";
 
 const STATUS_COLOR = {
   自動運転: "#2ecc71",
@@ -10,10 +11,21 @@ const STATUS_COLOR = {
 
 const ALL_STATUSES = Object.keys(STATUS_COLOR);
 
+const formatDuration = (ms) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  return `${h}h ${m}m ${s}s`;
+};
+
 const TimelineCsvUpload = () => {
   const [traces, setTraces] = useState([]);
   const [linesArray, setLinesArray] = useState([]);
   const [statusFilter, setStatusFilter] = useState([...ALL_STATUSES]);
+  // Store uploaded CSV files
+  const [lineAFile, setLineAFile] = useState(null);
+  const [lineBFile, setLineBFile] = useState(null);
 
   const processFile = (file, LineName) => {
     Papa.parse(file, {
@@ -52,6 +64,7 @@ const TimelineCsvUpload = () => {
           const end = rows[i + 1];
           timeline.push({
             start: start.datetime,
+            end: end.datetime,
             duration: end.datetime - start.datetime,
             status: start.status,
             count: end.count,
@@ -63,20 +76,22 @@ const TimelineCsvUpload = () => {
         const newTraces = timeline.map((t) => ({
           type: "bar",
           orientation: "h",
-          x: [t.duration],
+          x: [t.end - t.start],  
+          base: [t.start],       
           y: [t.line],
-          base: [t.start],
           marker: { color: STATUS_COLOR[t.status] || "#3498db" },
-          text: `Count: ${t.count}<br>Product: ${t.product_name}`,
+          width: 0.35,
+          text: `${t.count}<br> ${t.product_name}`,
           textposition: "inside",
           hovertemplate:
-            `開始: %{base}<br>` +
-            `終了: %{x}<br>` +
+            `開始: ${t.start.toLocaleTimeString()}<br>` +
+            `終了: ${t.end.toLocaleTimeString()}<br>` +
+            `期間: ${formatDuration(t.duration)}<br>` +
             `状態: ${t.status}<br>` +
             `数量: ${t.count}<br>` +
             `製品名: ${t.product_name}<extra></extra>`,
           showlegend: false,
-          status: t.status, // for filtering
+          status: t.status, 
         }));
 
         setTraces((prev) => {
@@ -99,70 +114,92 @@ const TimelineCsvUpload = () => {
   const filteredTraces = traces.filter((t) => statusFilter.includes(t.status));
 
   return (
-    <div className="timeline-wrapper">
-      <div className="timeline-csv-upload">
-        {/* LINE A INPUT */}
-        <div className="upload-group">
-          <label> ラインA </label>
+  <div className="timeline-wrapper">
+    <div className="timeline-csv-upload">
+
+      {/* LINE A INPUT + COUNTER */}
+      <div className="upload-row">
+        <div className="upload-input-container">
+          <label>ラインA</label>
           <input
             type="file"
             accept=".csv"
-            onChange={(e) => processFile(e.target.files[0], "LINE_A")}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              setLineAFile(file);         
+              processFile(file, "LINE_A"); 
+            }}
           />
         </div>
-
-        {/* LINE B INPUT */}
-        <div className="upload-group">
-          <label> ラインB </label>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={(e) => processFile(e.target.files[0], "LINE_B")}
-          />
+        <div className="upload-counter-container">
+          {lineAFile && <EffectiveCountSummary lineName="LINE_A" file={lineAFile} />}
         </div>
-
-        {/* STATUS FILTER */}
-        <div className="status-filter">
-          <label>フィルター: </label>
-          {ALL_STATUSES.map((status) => (
-            <label key={status} style={{ marginRight: "15px" }}>
-              <input
-                type="checkbox"
-                checked={statusFilter.includes(status)}
-                onChange={() => toggleStatus(status)}
-              />
-              {status}
-            </label>
-          ))}
-        </div>
-
-        {filteredTraces.length > 0 && (
-          <div className="timeline-plot">
-            <Plot
-              data={filteredTraces}
-              layout={{
-                title: "稼働タイムライン",
-                xaxis: {
-                  type: "date",
-                  tickformat: "%H:%M:%S",
-                  title: "Time",
-                },
-                yaxis: {
-                  title: "Line",
-                  categoryorder: "array",
-                  categoryarray: linesArray,
-                  automargin: true,
-                },
-                margin: { t: 90, b: 80, l: 100, r: 40 },
-                height: 220 + linesArray.length * 60,
-              }}
-              style={{ width: "100%", maxWidth: "3000px", margin: "0 auto" }}
-            />
-          </div>
-        )}
       </div>
+
+      {/* LINE B INPUT + COUNTER */}
+      <div className="upload-row">
+        <div className="upload-input-container">
+          <label>ラインB</label>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              setLineBFile(file);         
+              processFile(file, "LINE_B"); 
+            }}
+          />
+        </div>
+        <div className="upload-counter-container">
+          {lineBFile && <EffectiveCountSummary lineName="LINE_B" file={lineBFile} />}
+        </div>
+      </div>
+
+      {/* STATUS FILTER */}
+      <div className="status-filter">
+        <label>フィルター: </label>
+        {ALL_STATUSES.map((status) => (
+          <label key={status} style={{ marginRight: "15px" }}>
+            <input
+              type="checkbox"
+              checked={statusFilter.includes(status)}
+              onChange={() => toggleStatus(status)}
+            />
+            {status}
+          </label>
+        ))}
+      </div>
+
+      {/* TIMELINE PLOT */}
+      {filteredTraces.length > 0 && (
+        <div className="timeline-plot">
+          <Plot
+            data={filteredTraces}
+            layout={{
+              title: "稼働タイムライン",
+              barmode: "overlay",
+              xaxis: {
+                type: "date",
+                tickformat: "%H:%M:%S",
+                title: "Time",
+              },
+              yaxis: {
+                title: "Line",
+                categoryorder: "array",
+                categoryarray: linesArray,
+                automargin: true,
+              },
+              margin: { t: 90, b: 80, l: 100, r: 40 },
+              height: 220 + linesArray.length * 60,
+            }}
+            style={{ width: "100%", maxWidth: "3000px", margin: "0 auto" }}
+          />
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default TimelineCsvUpload;

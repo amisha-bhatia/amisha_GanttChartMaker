@@ -19,6 +19,51 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
+/* Row for input + counter */
+.upload-row {
+  display: flex;
+  align-items: center;           /* vertically align input and counter */
+  justify-content: space-between; 
+  margin-bottom: 16px;
+  width: 100%;
+  gap: 16px;                     
+}
+
+/* Input container: label above input */
+.upload-input-container {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 220px;               /* fixed input width */
+}
+
+/* Label spacing above input */
+.upload-input-container label {
+  margin-bottom: 6px;            /* space between label and input */
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Counter container styling */
+.upload-counter-container {
+  display: flex;
+  align-items: center;            /* vertical center with input */
+  height: 38px;                   /* match input height */
+}
+
+/* EffectiveCountSummary styling */
+.effective-count-summary {
+  padding: 6px 12px;
+  background-color: #f9fafc;
+  border: 1px solid #e5e9ef;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  height: 100%;                   /* fill container height */
+}
+
 /* File input */
 .timeline-csv-upload input[type="file"] {
   display: inline-block;
@@ -64,16 +109,6 @@
   fill: #2c3e50 !important;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .timeline-csv-upload {
-    padding: 1.2rem;
-  }
-
-  .timeline-plot {
-    padding: 8px;
-  }
-}
 /* Status filter container */
 .status-filter {
   margin-top: 16px;
@@ -103,12 +138,20 @@
   width: 16px;
   height: 16px;
   margin-right: 6px;
-  accent-color: #3498db; /* checkbox color */
+  accent-color: #3498db;
   cursor: pointer;
 }
 
-/* Responsive for mobile */
+/* Responsive */
 @media (max-width: 768px) {
+  .timeline-csv-upload {
+    padding: 1.2rem;
+  }
+
+  .timeline-plot {
+    padding: 8px;
+  }
+
   .status-filter {
     justify-content: flex-start;
     padding: 8px 10px;
@@ -118,5 +161,25 @@
   .status-filter label {
     margin-right: 12px;
     margin-bottom: 6px;
+  }
+
+  .upload-row {
+    flex-direction: column;       /* stack input + counter on mobile */
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .upload-counter-container {
+    width: 100%;                  /* fill width on mobile */
+    height: auto;
+  }
+
+  .upload-input-container {
+    width: 100%;
+    flex: none;
+  }
+
+  .effective-count-summary {
+    height: auto;
   }
 }
