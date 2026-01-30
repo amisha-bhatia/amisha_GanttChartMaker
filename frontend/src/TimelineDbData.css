@@ -1,0 +1,111 @@
+/* Container */
+.timeline-container {
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #f7f9fb;
+}
+
+/* Top toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* Date picker section */
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.date-picker label {
+  font-weight: 600;
+  color: #333;
+}
+
+.date-picker input[type="date"] {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccd6dd;
+  font-size: 14px;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.date-picker input[type="date"]:focus {
+  outline: none;
+  border-color: #4c9aff;
+  box-shadow: 0 0 0 2px rgba(76, 154, 255, 0.15);
+}
+
+/* Status filter section */
+.status-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  font-size: 14px;
+}
+
+.status-filter label {
+  font-weight: 600;
+  margin-right: 4px;
+  color: #333;
+}
+
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.status-option input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #4c9aff;
+}
+
+/* Chart wrapper */
+.chart-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+/* Empty state */
+.no-data {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #6b7c93;
+  padding: 40px 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
