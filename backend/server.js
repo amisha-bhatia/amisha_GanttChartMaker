@@ -10,9 +10,11 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-const dbPath = path.resolve(
-  "C:/project/SMTScreenVision/src/storage/data/db/database.db"
-);
+
+const dbPath =
+  process.env.DB_PATH ||
+  "C:/project/SMTScreenVision/src/storage/data/db/database.db";
+
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
     console.error("Error opening database:", err.message);
@@ -44,13 +46,25 @@ app.get("/api/ocr_records", (req, res) => {
       product_name: r.item_02_value || "",
       count: parseInt(r.item_03_value || 0),
       note: r.note || "",
-      line: "LINE_A", // assign manually if needed
+      line: "LINE_A",
     }));
 
     res.json(data);
   });
 });
 
-app.listen(PORT, () => {
+// Path to: C:\project\smt-timeline\frontend\build
+const frontendPath =
+  process.env.FRONTEND_BUILD_PATH ||
+  "C:/project/smt-timeline/frontend/build";
+
+app.use(express.static(frontendPath));
+
+app.use((req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
+
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
