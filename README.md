@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+Setup Instructions / セットアップ手順
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Install Node.js / Node.js のインストール
 
-## Available Scripts
+Install the LTS (Long Term Support) version of Node.js from:Node.js の LTS（長期サポート）版 を以下からインストールしてください：https://nodejs.org
 
-In the project directory, you can run:
+2. Install Backend Dependencies / バックエンド依存関係のインストール
 
-### `npm start`
+Open a terminal and run:ターミナルを開いて以下を実行します：
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+cd backend
+npm install
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+3. Install Frontend Dependencies and Build / フロントエンド依存関係のインストールとビルド
 
-### `npm test`
+cd frontend
+npm install
+npm run build
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This will generate production build files in:このコマンドにより、以下のフォルダに本番用ビルドファイルが生成されます：
 
-### `npm run build`
+frontend/build
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Confirm Database Path / データベースパスの確認
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Make sure the SQLite database file exists before starting the app:アプリ起動前に、以下の場所に SQLite データベースファイルが存在することを確認してください：
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+C:\project\SMTScreenVision\src\storage\data\db\database.db
 
-### `npm run eject`
+If the file or folders are missing, create them or run your database initialization process.ファイルまたはフォルダが存在しない場合は、手動で作成するかデータベース初期化処理を実行してください。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Start the Application / アプリケーションの起動
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Run:以下を実行します：
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+start.bat
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The server will start and the application will open automatically in your browser.サーバーが起動し、アプリケーションが自動的にブラウザで開きます。
 
-## Learn More
+Additional README Information / 追加情報
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Environment Requirements / 動作環境
 
-### Code Splitting
+Node.js LTS
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Windows OS (required for start.bat)
 
-### Analyzing the Bundle Size
+SQLite (no separate installation required if the DB file exists)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Troubleshooting / トラブルシューティング
 
-### Making a Progressive Web App
+Port Already in Use / ポートが使用中の場合
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Close other applications using port 5000 or change the backend port in the server configuration.ポート 5000 を使用している他のアプリケーションを終了するか、サーバー設定でポート番号を変更してください。
 
-### Advanced Configuration
+3. Database Errors / データベースエラー
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Verify the database file exists at the path listed above and is not set to read‑only.上記パスにデータベースファイルが存在し、読み取り専用になっていないことを確認してください。
 
-### Deployment
+4. Frontend Not Updating / フロントエンドが更新されない
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Rebuild the frontend:フロントエンドを再ビルドしてください：
 
-### `npm run build` fails to minify
+cd frontend
+npm run build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Then restart the application.その後、アプリケーションを再起動してください。
+
+Rebuilding Everything / 再ビルド手順
+
+If dependencies become corrupted, run:依存関係に問題が発生した場合は以下を実行します：
+
+cd backend && npm install
+cd ../frontend && npm install && npm run build
+
+Notes / 注意事項
+
+Do not modify files inside frontend/build manually.frontend/build フォルダ内のファイルを手動で変更しないでください。
+
+The backend serves the compiled frontend in production mode.本番環境ではバックエンドがビルド済みフロントエンドを配信します。
+
+Keep the database file backed up regularly.データベースファイルは定期的にバックアップを取ってください。
+
