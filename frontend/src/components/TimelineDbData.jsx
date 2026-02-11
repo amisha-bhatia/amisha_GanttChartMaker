@@ -1,7 +1,7 @@
-// src/components/TimelineDbData.jsx
 import React, { useEffect, useState } from "react";
 import TimelinePlot from "./TimelinePlot";
 import StatusFilter from "./StatusFilter";
+import EffectiveCountSummary from "./EffectiveCountSummary";
 import { getProductionRange, formatDuration } from "./utils";
 import { fetchOcrRecords } from "../api/ocrRecords";
 import "./TimelineDbData.css";
@@ -110,6 +110,18 @@ const TimelineDbData = () => {
           toggleStatus={toggleStatus}
         />
 
+        {/*  Count Summary */}
+        <div className="summary-section">
+          {linesArray.map((line) => (
+            <EffectiveCountSummary
+              key={line}
+              lineName={line}
+              selectedDate={selectedDate}
+            />
+          ))}
+        </div>
+
+        {/* Timeline Chart */}
         {filteredTraces.length > 0 ? (
           <TimelinePlot traces={filteredTraces} linesArray={linesArray} />
         ) : (
