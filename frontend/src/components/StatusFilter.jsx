@@ -21,16 +21,19 @@ const StatusFilter = ({
       </div>
 
       {/* Status Checkboxes */}
-      {allStatuses.map((status) => (
-        <label key={status} style={{ marginRight: "15px" }}>
-          <input
-            type="checkbox"
-            checked={statusFilter.includes(status)}
-            onChange={() => toggleStatus(status)}
-          />
-          {status}
-        </label>
-      ))}
+      <div className="status-filters-right">
+        {allStatuses.map((status) => (
+          <label key={status}>
+            <input
+              type="checkbox"
+              checked={statusFilter.includes(status)}
+              onChange={() => toggleStatus(status)}
+            />
+            <span className="toggle"></span>
+            {status}
+          </label>
+        ))}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import StatusFilter from "./StatusFilter";
 import EffectiveCountSummary from "./EffectiveCountSummary";
 import { getProductionRange, formatDuration } from "./utils";
 import { fetchOcrRecords } from "../api/ocrRecords";
-import "./TimelineDbData.css";
+
 
 const STATUS_COLOR = {
   自動運転: "#2ecc71",

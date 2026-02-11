@@ -60,18 +60,10 @@ const EffectiveCountSummary = ({ lineName, selectedDate }) => {
   }, [lineName, selectedDate]);
 
   return (
-    <div
-      style={{
-        marginTop: "12px",
-        padding: "10px 14px",
-        border: "1px solid #e5e9ef",
-        borderRadius: "8px",
-        backgroundColor: "#f9fafc",
-        fontSize: "14px",
-        fontWeight: "500",
-      }}
-    >
-      {lineName} の合計カウント: {effectiveCount.toLocaleString()}
+    <div className="effective-count-summary">
+      <span className="line-name">{lineName}</span>
+      <div className="count-value">{effectiveCount.toLocaleString()}</div>
+      <div className="units">合計カウント</div>
     </div>
   );
 };

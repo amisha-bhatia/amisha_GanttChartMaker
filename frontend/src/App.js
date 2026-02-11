@@ -1,5 +1,5 @@
 import TimelineDbData from "./components/TimelineDbData";
-
+import './App.css';
 
 
 function App() {

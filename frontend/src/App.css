@@ -1,0 +1,225 @@
+:root {
+  --bg: #000;
+  --surface: #0d0d0d;
+  --surface-2: #111;
+  --border: #1f1f1f;
+  --border-light: #2a2a2a;
+  --text: #ffffff;
+  --text-dim: #9e9e9e;
+  --accent: #4caf50;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 14px;
+}
+
+h2 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.timeline-wrapper {
+  min-height: 100vh;
+  padding: 32px 24px 60px;
+}
+
+.timeline-upload {
+  max-width: 1500px;
+  margin: auto;
+}
+
+.status-filter {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  flex-wrap: wrap; 
+}
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-dim);
+  order: 1; 
+  margin-left: 18px;
+}
+
+.status-filters-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  order: 2; 
+  margin-right: 18px;
+}
+
+.date-picker input {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+.date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.date-picker input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.status-filter label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-dim);
+  user-select: none;
+}
+
+.status-filter input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.status-filter .toggle {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  background: var(--border-light);
+  border-radius: 20px;
+  transition: background 0.3s;
+}
+
+.status-filter .toggle::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background: var(--bg);
+  border-radius: 50%;
+  transition: transform 0.3s, background 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.status-filter input[type="checkbox"]:checked + .toggle {
+  background: var(--accent);
+}
+
+.status-filter input[type="checkbox"]:checked + .toggle::before {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+.status-filter label:hover .toggle {
+  background: var(--border);
+}
+
+.summary-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.effective-count-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 26px;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.line-name {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
+}
+
+.count-value {
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color:#00FFFF;
+}
+
+.units {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+.timeline-plot {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.no-data {
+  margin-top: 50px;
+  padding: 28px;
+  text-align: center;
+  border: 1px dashed var(--border-light);
+  border-radius: 14px;
+  color: var(--text-dim);
+  background: var(--surface);
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .effective-count-summary {
+    width: 100%;
+  }
+
+  .count-value {
+    font-size: 38px;
+  }
+
+  .status-filter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
