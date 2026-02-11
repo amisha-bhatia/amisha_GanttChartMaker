@@ -3,17 +3,16 @@ const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
 const path = require("path");
+const config = require("./config");
 
 const app = express();
-const PORT = 5000;
+const PORT = config.port;
 
 app.use(cors());
 app.use(express.json());
 
 
-const dbPath =
-  process.env.DB_PATH ||
-  "C:/project/SMTScreenVision/src/storage/data/db/database.db";
+const dbPath = config.dbPath;
 
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
@@ -53,10 +52,7 @@ app.get("/api/ocr_records", (req, res) => {
   });
 });
 
-// Path to: C:\project\smt-timeline\frontend\build
-const frontendPath =
-  process.env.FRONTEND_BUILD_PATH ||
-  "C:/project/smt-timeline/frontend/build";
+const frontendPath = config.frontendBuildPath;
 
 app.use(express.static(frontendPath));
 
